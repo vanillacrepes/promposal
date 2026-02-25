@@ -6,6 +6,7 @@ export default function App() {
   const [isScared, setIsScared] = useState(false);
   const [isTeleporting, setIsTeleporting] = useState(false);
   const [yesMessage, setYesMessage] = useState("");
+  const [noMessage, setNoMessage] = useState("");
 
   const noPosRef = useRef({ x: 0, y: 0 });
   const noRef = useRef<HTMLButtonElement>(null);
@@ -61,8 +62,14 @@ export default function App() {
         let newY = noPosRef.current.y + Math.sin(fleeAngle) * force;
 
         const padding = 12;
-        newX = Math.max(padding, Math.min(container.width - btnW - padding, newX));
-        newY = Math.max(padding, Math.min(container.height - btnH - padding, newY));
+        newX = Math.max(
+          padding,
+          Math.min(container.width - btnW - padding, newX),
+        );
+        newY = Math.max(
+          padding,
+          Math.min(container.height - btnH - padding, newY),
+        );
 
         noPosRef.current = { x: newX, y: newY };
         setNoPos({ x: newX, y: newY });
@@ -70,14 +77,15 @@ export default function App() {
         setIsScared(false);
       }
     },
-    [initialized]
+    [initialized],
   );
 
   return (
     <div
       className="w-screen h-screen flex items-center justify-center overflow-hidden relative"
       style={{
-        background: "linear-gradient(135deg, #fdf4f0 0%, #fde8e0 50%, #f9d4c8 100%)",
+        background:
+          "linear-gradient(135deg, #fdf4f0 0%, #fde8e0 50%, #f9d4c8 100%)",
         fontFamily: "'Georgia', serif",
       }}
     >
@@ -116,7 +124,8 @@ export default function App() {
           style={{
             background: "rgba(255,255,255,0.65)",
             backdropFilter: "blur(18px)",
-            boxShadow: "0 8px 60px rgba(200,80,60,0.12), 0 2px 12px rgba(0,0,0,0.06)",
+            boxShadow:
+              "0 8px 60px rgba(200,80,60,0.12), 0 2px 12px rgba(0,0,0,0.06)",
             border: "1px solid rgba(255,255,255,0.8)",
           }}
         >
@@ -149,12 +158,14 @@ export default function App() {
               letterSpacing: "0.02em",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.07)";
+              (e.currentTarget as HTMLButtonElement).style.transform =
+                "scale(1.07)";
               (e.currentTarget as HTMLButtonElement).style.boxShadow =
                 "0 6px 28px rgba(232,69,60,0.55)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
+              (e.currentTarget as HTMLButtonElement).style.transform =
+                "scale(1)";
               (e.currentTarget as HTMLButtonElement).style.boxShadow =
                 "0 4px 20px rgba(232,69,60,0.4)";
             }}
@@ -185,17 +196,35 @@ export default function App() {
             </div>
           )}
 
+          {/* Animated No message */}
+          {noMessage && (
+            <div
+              className="absolute top-4 left-1/2 transform -translate-x-1/2 rounded-2xl px-6 py-3 pointer-events-none select-none animate-fade"
+              style={{
+                background: "rgba(255, 255, 255, 0.85)",
+                backdropFilter: "blur(12px)",
+                color: "#e8453c",
+                fontFamily: "'Georgia', serif",
+                fontWeight: 700,
+                fontSize: "1.5rem",
+                textAlign: "center",
+                boxShadow: "0 4px 20px rgba(232,69,60,0.2)",
+              }}
+            >
+              {noMessage}
+            </div>
+          )}
+
           {isScared && (
             <p
               className="absolute bottom-6 text-s text-rose-300 italic pointer-events-none select-none"
               style={{ fontFamily: "sans-serif" }}
             >
-              I mean, if you can catch me ig
+              I mean, if you can catch me hehehhehe
             </p>
           )}
         </div>
 
-        {/* Invisible No button */}
         {!initialized && (
           <button
             ref={noRef}
@@ -225,11 +254,16 @@ export default function App() {
               boxShadow: isScared
                 ? "0 8px 30px rgba(232,69,60,0.2)"
                 : "0 2px 10px rgba(232,69,60,0.08)",
-              transform: isScared ? "rotate(-10deg) scale(0.92)" : "rotate(0deg) scale(1)",
+              transform: isScared
+                ? "rotate(-10deg) scale(0.92)"
+                : "rotate(0deg) scale(1)",
               cursor: "default",
               backdropFilter: "blur(8px)",
             }}
             onClick={() => {
+              setNoMessage("nooooo I'll be sad :(");
+              setTimeout(() => setNoMessage(""), 3000);
+
               if (!containerRef.current || !noRef.current) return;
               const container = containerRef.current.getBoundingClientRect();
               const btn = noRef.current.getBoundingClientRect();
@@ -243,7 +277,10 @@ export default function App() {
                 newY = padding + Math.random() * (maxY - padding);
                 attempts++;
               } while (
-                Math.hypot(newX - noPosRef.current.x, newY - noPosRef.current.y) < 200 &&
+                Math.hypot(
+                  newX - noPosRef.current.x,
+                  newY - noPosRef.current.y,
+                ) < 200 &&
                 attempts < 20
               );
               noPosRef.current = { x: newX, y: newY };
