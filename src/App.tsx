@@ -216,8 +216,6 @@ export default function App() {
               setIsTeleporting(true);
               setNoPos({ x: newX, y: newY });
               setTimeout(() => setIsTeleporting(false), 50);
-
-              alert("nuh uh")
             }}
           >
             No !
