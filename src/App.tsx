@@ -51,11 +51,8 @@ export default function App() {
 
       if (dist < FLEE_RADIUS) {
         setIsScared(true);
-        // Stronger force, especially up close
         const force = Math.pow((FLEE_RADIUS - dist) / FLEE_RADIUS, 0.5) * 280;
         const angle = Math.atan2(dy, dx);
-
-        // Slight random juke so it slips sideways and can't be cornered as easily
         const juke = (Math.random() - 0.5) * 0.5;
         const fleeAngle = angle + Math.PI + juke;
 
@@ -77,28 +74,42 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center overflow-hidden"
+      className="w-screen h-screen flex items-center justify-center overflow-hidden relative"
       style={{
         background: "linear-gradient(135deg, #fdf4f0 0%, #fde8e0 50%, #f9d4c8 100%)",
         fontFamily: "'Georgia', serif",
       }}
     >
+      {/* Glows */}
       <div
         className="absolute rounded-full opacity-20 blur-3xl pointer-events-none"
-        style={{ width: 400, height: 400, background: "#f4a582", top: "-80px", left: "-100px" }}
+        style={{
+          width: 400,
+          height: 400,
+          background: "#f4a582",
+          top: "0",
+          left: "0",
+          transform: "translate(-20%, -20%)",
+        }}
       />
       <div
         className="absolute rounded-full opacity-15 blur-3xl pointer-events-none"
-        style={{ width: 300, height: 300, background: "#e86c5d", bottom: "-60px", right: "-80px" }}
+        style={{
+          width: 300,
+          height: 300,
+          background: "#e86c5d",
+          bottom: "0",
+          right: "0",
+          transform: "translate(20%, 20%)",
+        }}
       />
 
+      {/* Card Container */}
       <div
         ref={containerRef}
-        className="relative w-full max-w-2xl mx-4"
-        style={{ height: "480px" }}
+        className="relative w-full max-w-2xl mx-auto h-[480px] overflow-hidden"
         onMouseMove={handleMouseMove}
       >
-        {/* Card */}
         <div
           className="absolute inset-0 rounded-3xl flex flex-col items-center justify-center gap-10"
           style={{
@@ -126,7 +137,7 @@ export default function App() {
             </h1>
           </div>
 
-          {/* Yes button — stays in normal flow to anchor layout */}
+          {/* Yes button */}
           <button
             ref={yesRef}
             className="px-10 py-3 rounded-2xl text-white text-lg font-semibold transition-all duration-150 active:scale-95"
@@ -201,7 +212,6 @@ export default function App() {
               const padding = 12;
               const maxX = container.width - btn.width - padding;
               const maxY = container.height - btn.height - padding;
-              // Pick a random position that's far from current position
               let newX: number, newY: number;
               let attempts = 0;
               do {
