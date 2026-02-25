@@ -5,13 +5,14 @@ export default function App() {
   const [initialized, setInitialized] = useState(false);
   const [isScared, setIsScared] = useState(false);
   const [isTeleporting, setIsTeleporting] = useState(false);
+  const [yesMessage, setYesMessage] = useState("");
 
   const noPosRef = useRef({ x: 0, y: 0 });
   const noRef = useRef<HTMLButtonElement>(null);
   const yesRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize No button right next to Yes button
+  // Initialize No button next to Yes
   useEffect(() => {
     if (!noRef.current || !yesRef.current || !containerRef.current) return;
 
@@ -157,9 +158,32 @@ export default function App() {
               (e.currentTarget as HTMLButtonElement).style.boxShadow =
                 "0 4px 20px rgba(232,69,60,0.4)";
             }}
+            onClick={() => {
+              setYesMessage("look behind you <3");
+              setTimeout(() => setYesMessage(""), 3000);
+            }}
           >
             Yes!
           </button>
+
+          {/* Animated Yes message */}
+          {yesMessage && (
+            <div
+              className="absolute top-4 left-1/2 transform -translate-x-1/2 rounded-2xl px-6 py-3 pointer-events-none select-none animate-fade"
+              style={{
+                background: "rgba(255, 255, 255, 0.85)",
+                backdropFilter: "blur(12px)",
+                color: "#e8453c",
+                fontFamily: "'Georgia', serif",
+                fontWeight: 700,
+                fontSize: "1.5rem",
+                textAlign: "center",
+                boxShadow: "0 4px 20px rgba(232,69,60,0.2)",
+              }}
+            >
+              {yesMessage}
+            </div>
+          )}
 
           {isScared && (
             <p
@@ -171,7 +195,7 @@ export default function App() {
           )}
         </div>
 
-        {/* Invisible No — used only to measure its size before initialization */}
+        {/* Invisible No button */}
         {!initialized && (
           <button
             ref={noRef}
@@ -182,7 +206,7 @@ export default function App() {
           </button>
         )}
 
-        {/* No button — absolutely positioned, flees cursor aggressively */}
+        {/* No button — flees cursor */}
         {initialized && (
           <button
             ref={noRef}
@@ -232,6 +256,21 @@ export default function App() {
           </button>
         )}
       </div>
+
+      {/* Add fade animation CSS */}
+      <style>
+        {`
+          @keyframes fade {
+            0% { opacity: 0; transform: translateY(-10px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+          }
+          .animate-fade {
+            animation: fade 3s ease forwards;
+          }
+        `}
+      </style>
     </div>
   );
 }
